@@ -1,0 +1,156 @@
+package com.bh.cp.audit.trail;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.bh.cp.audit.trail.constants.AuditTrailConstants;
+import com.bh.ip.ss.adapter.config.AdapterProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.ParseException;
+
+@SpringBootApplication
+@EnableEncryptableProperties
+@ComponentScan(basePackages = { "com.bh.ip.user", "com.bh.ip.group", "com.bh.ip.ss.adapter", "com.bh.ip.exception",
+		"com.bh.ip.ss.logger", "com.bh.tenant.config.handler", "com.bh.ip.user.cronjobs", "com.bh.*" })
+public class AuditTrailServiceApplication {
+
+	private static final Logger logger = LoggerFactory.getLogger(AuditTrailServiceApplication.class);
+
+	@Value("${default.tenant.configuration}")
+	private String tenantInfo;
+
+	@Value("${keycloak.auth.url}")
+	private String authServerUrl;
+
+	@Value("${filter.url.exclusion-list:null}")
+	private String urlExclusionList;
+
+	@Value("${paths.file.location}")
+	private String pathsFileLocation;
+
+	@Value("${rbac.support}")
+	private String rbacSupport;
+
+	@Value("${authorization.type:null}")
+	private String authorizationType;
+
+	@Value("${dfcs.url:null}")
+	private String dfscUrl;
+
+	@Value("${abac.support:null}")
+	private String abacSupport;
+
+	@Value("${cache.ttl:0}")
+	private String cacheTTL;
+
+	@Value("${keycloak.client-id}")
+	private String clientId;
+
+	@Value("${cors.origin.urls}")
+	private String corsOriginUrls;
+
+	@Value("${cors.origin.patterns}")
+	private String corsOriginPatterns;
+
+	public static void main(String[] args) {
+		SpringApplication.run(AuditTrailServiceApplication.class, args);
+	}
+
+	@Bean
+	public String addBHCerts(@Value("${bh.cert.filename}") String bhCertFileName) throws IOException {
+		ClassPathResource classPathResource = new ClassPathResource(bhCertFileName);
+		InputStream inputStream = classPathResource.getInputStream();
+		logger.info("Creating Temp cert file...");
+		File newFile = new File("test.txt");
+		logger.info("Setting executable permission --- {}",
+				newFile.setExecutable(false) ? AuditTrailConstants.SUCCESS : AuditTrailConstants.FAILURE);
+		logger.info("Setting readable permission and allowed only for owner --- {}",
+				newFile.setReadable(true, true) ? AuditTrailConstants.SUCCESS : AuditTrailConstants.FAILURE);
+		logger.info("Setting writable permission and allowed only for owner --- {}",
+				newFile.setWritable(true, true) ? AuditTrailConstants.SUCCESS : AuditTrailConstants.FAILURE);
+		try {
+			java.nio.file.Files.copy(inputStream, newFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+		} finally {
+			inputStream.close();
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				try {
+					logger.info("Deleting temp cert file previously created --- {}",
+							Files.deleteIfExists(newFile.toPath()) ? AuditTrailConstants.SUCCESS
+									: AuditTrailConstants.FAILURE);
+				} catch (Exception e) {
+					logger.error("Could not delete temp file. Please delete manually.", e);
+				}
+			}));
+		}
+		return System.setProperty("javax.net.ssl.trustStore", newFile.getPath());
+	}
+
+	@Bean(name = "adapterProperties")
+	public AdapterProperties adapterProperties() throws IOException, ParseException {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("tenant_info", tenantInfo);
+		jsonObject.put("auth_server_url", authServerUrl);
+		jsonObject.put("url_exclusion_list", urlExclusionList);
+		ClassPathResource classPathResource = new ClassPathResource(pathsFileLocation);
+		try (InputStream inputStream = classPathResource.getInputStream()) {
+			String paths = new ObjectMapper().readValue(inputStream, Object.class).toString();
+			jsonObject.put("path_info", paths);
+		}
+		jsonObject.put("rbac_support", rbacSupport);
+		jsonObject.put("authorization_type", authorizationType);
+		jsonObject.put("abac_support", abacSupport);
+		jsonObject.put("dfsc_url", dfscUrl);
+		jsonObject.put("cache_ttl", cacheTTL);
+		jsonObject.put("client_id", clientId);
+		return new AdapterProperties(jsonObject.toJSONString());
+	}
+
+	//Add Request Method based on the controllers
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+						.allowedHeaders(
+								"Access-Control-Request-Headers,Accept,Accept-Language,Content-Language,Content-Type")
+						.allowedMethods("GET", "POST").allowedOrigins(corsOriginUrls.split(","))
+						.allowedOriginPatterns(corsOriginPatterns.split(","));
+			}
+		};
+	}
+
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		return http.headers(headersCustomizer -> headersCustomizer.xssProtection(
+				xssCustomizer -> xssCustomizer.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
+				.contentSecurityPolicy(contentSecurityCustomizer -> contentSecurityCustomizer
+						.policyDirectives("form-action 'self'").policyDirectives("script-src 'self'")))
+				.build();
+	}
+	
+	@Bean
+	public ModelMapper modelMapper(){
+		return new ModelMapper();
+	}
+}

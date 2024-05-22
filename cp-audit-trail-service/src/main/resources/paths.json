@@ -1,0 +1,26 @@
+[
+	{
+		"path": "/v1/audit/usage",
+		"methods": [
+			{
+				"method": "POST",
+				"scopes": [
+					"read_access",
+					"write_access"
+				]
+			}
+		]
+	},
+	{
+		"path": "/v1/audit/performances",
+		"methods": [
+			{
+				"method": "POST",
+				"scopes": [
+					"read_access",
+					"write_access"
+				]
+			}
+		]
+	}
+]

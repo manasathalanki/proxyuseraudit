@@ -1,0 +1,14 @@
+[
+	{
+		"path": "/v1/test",
+		"methods": [
+			{
+				"method": "GET",
+				"scopes": [
+					"read_access",
+					"write_access"
+				]
+			}
+		]
+	}
+]

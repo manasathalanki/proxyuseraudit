@@ -1,0 +1,173 @@
+[
+	{
+		"properties": [
+			{
+				"name": "PATHS",
+				"type": "java.lang.String",
+				"description": "Allowed 'PATHS'"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "DEFAULT_TENANT_CONFIGURATION",
+				"type": "java.lang.String",
+				"description": "Default tenant configuration'"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "useTms",
+				"type": "java.lang.String",
+				"description": "Use Tms"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "app.instance.id",
+				"type": "java.lang.String",
+				"description": "Application instance ID"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "app.address",
+				"type": "java.lang.String",
+				"description": "Application's addressing identity"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "app.name",
+				"type": "java.lang.String",
+				"description": "Application name"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "client.secret",
+				"type": "java.lang.String",
+				"description": "Keycloak client secret"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "client.id",
+				"type": "java.lang.String",
+				"description": "Keycloak client ID"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "cache.ttl",
+				"type": "java.lang.String",
+				"description": "Cache time to live"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "dfcs.url",
+				"type": "java.lang.String",
+				"description": "DFCS URL"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "authorization.type",
+				"type": "java.lang.String",
+				"description": "Authorization type"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "rbac.support",
+				"type": "java.lang.String",
+				"description": "RBAC Support"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "keycloak.auth-server-url",
+				"type": "java.lang.String",
+				"description": "Auth server URL"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "keycloak.base.url",
+				"type": "java.lang.String",
+				"description": "Keycloak base URL"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "bh.cert.filename",
+				"type": "java.lang.String",
+				"description": "Certificate file"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "keycloak-wrapper-service-uri",
+				"type": "java.lang.String",
+				"description": "KEycloak wrapper service URL"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "restrict-key",
+				"type": "java.lang.String",
+				"description": "Restrict key"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "restrict-secret",
+				"type": "java.lang.String",
+				"description": "Restrict secret"
+			}
+		]
+	},
+	{
+		"properties": [
+			{
+				"name": "bh.asset.hierarchy.url",
+				"type": "java.lang.String",
+				"description": "Asset hierarchy service URL"
+			}
+		]
+	}
+]

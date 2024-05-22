@@ -1,0 +1,79 @@
+{
+	"fields": {
+		"data": [
+			{
+				"fields": [
+					"customer",
+					"description",
+					"project_cus_desc"
+				],
+				"level": "projects"
+			},
+			{
+				"fields": [
+					"plantName",
+					"plant_cus_desc"
+				],
+				"level": "plants"
+			},
+			{
+				"fields": [
+					"description"
+				],
+				"level": "trains"
+			},
+			{
+				"fields": [
+					"lnupName"
+				],
+				"level": "lineups"
+			},
+			{
+				"fields": [
+					"serialNo",
+					"gibSerialNo",
+					"oemSerialNo",
+					"technologyCodeOg",
+					"equipmentCode",
+					"lowNox",
+					"activeDataTransfer",
+					"rmdServiceLevel",
+					"f_act_data_trans",
+					"serviceLevel"
+				],
+				"level": "machines"
+			}
+		],
+		"direction": "down",
+		"enabled_service": true
+	},
+	"sortConditions": [
+		{
+			"field": "project_cus_desc",
+			"level": "projects",
+			"order": "asc"
+		},
+		{
+			"field": "plant_cus_desc",
+			"level": "plants",
+			"order": "asc"
+		},
+		{
+			"field": "description",
+			"level": "trains",
+			"order": "asc"
+		},
+		{
+			"field": "lnupName",
+			"level": "lineups",
+			"order": "asc"
+		},
+		{
+			"field": "oemSerialNo",
+			"level": "machines",
+			"order": "asc"
+		}
+	],
+	"limit": "",
+	"offset": "0"
+}

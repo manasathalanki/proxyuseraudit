@@ -1,0 +1,38 @@
+[
+	{
+		"path": "/v1/assets",
+		"methods": [
+			{
+				"method": "GET",
+				"scopes": [
+					"read_access",
+					"write_access"
+				]
+			}
+		]
+	},
+	{
+		"path": "/v1/widgetsdata",
+		"methods": [
+			{
+				"method": "POST",
+				"scopes": [
+					"read_access",
+					"write_access"
+				]
+			}
+		]
+	},
+	{
+		"path": "/v1/layouts",
+		"methods": [
+			{
+				"method": "POST",
+				"scopes": [
+					"read_access",
+					"write_access"
+				]
+			}
+		]
+	}
+]

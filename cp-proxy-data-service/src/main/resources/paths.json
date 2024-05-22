@@ -1,0 +1,26 @@
+[
+	{
+		"path": "/v1/widgetsdata",
+		"methods": [
+			{
+				"method": "POST",
+				"scopes": [
+					"read_access",
+					"write_access"
+				]
+			}
+		]
+	},
+	{
+		"path": "/v1/casesdata",
+		"methods": [
+			{
+				"method": "POST",
+				"scopes": [
+					"read_access",
+					"write_access"
+				]
+			}
+		]
+	}
+]
